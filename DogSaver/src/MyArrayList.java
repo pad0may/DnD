@@ -28,7 +28,13 @@ public class MyArrayList<E> {
 
 	/* Return the number of active slots in the array list */
 	public int size() {
-		/* ---- YOUR CODE HERE ---- */
+		int num = 0;
+		for (int i = 0; i < internalArray.length-1; i++) {
+			if (internalArray[i] != null) {
+				num++;
+			}
+		}
+		return num;
 	}
 
 	/* Are there zero objects in the array list? */
