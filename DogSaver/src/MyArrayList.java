@@ -87,14 +87,11 @@ public class MyArrayList<E> {
   /* Add an object to the end of the list; returns true */
   @SuppressWarnings("unchecked")
   public boolean add(E obj) {
-    for (int i = 0; i < internalArray.length; i++) {
-      if (internalArray[i] == null) {
-        internalArray[i] = obj;
-      } else {
-        doubleArray();
-        internalArray[i + 1] = obj;
-      }
+    if (objectCount == internalArray.length) {
+      doubleArray();
     }
+    internalArray[objectCount] = obj;
+    objectCount++;
     return true;
   }
 
