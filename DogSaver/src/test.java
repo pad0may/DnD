@@ -2,8 +2,11 @@ import java.util.ArrayList;
 
 public class test {
   public static void main(String[] args) {
-    ArrayList list = new ArrayList<>();
-    System.out.println(list.size());
-    System.out.println("test");
+    MyArrayList list = new MyArrayList<>();
+    String str = "1";
+    for (int i = 0; i < 99; i++) {
+      list.add(str);
+    }
+    System.out.println(list.toString());
   }
 }

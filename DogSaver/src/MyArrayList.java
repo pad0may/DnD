@@ -52,7 +52,8 @@ public class MyArrayList<E> {
   }
 
   /*
-   * Returns true if this list contains an element equal to obj; otherwise returns false.
+   * Returns true if this list contains an element equal to obj; otherwise returns
+   * false.
    */
   public boolean contains(E obj) {
     for (int i = 0; i < internalArray.length; i++) {
@@ -74,7 +75,13 @@ public class MyArrayList<E> {
   /* Insert an object at index */
   @SuppressWarnings("unchecked")
   public void add(int index, E obj) {
-    /* ---- YOUR CODE HERE ---- */
+    if (objectCount == internalArray.length) {
+      doubleArray();
+    }
+    for (int i = index; i < objectCount; i++) {
+      internalArray[i + 1] = internalArray[i];
+    }
+    internalArray[index] = obj;
   }
 
   /* Add an object to the end of the list; returns true */
@@ -102,10 +109,14 @@ public class MyArrayList<E> {
   }
 
   /*
-   * Removes the first occurrence of the specified element from this list, if it is present. If the
-   * list does not contain the element, it is unchanged. More formally, removes the element with the
-   * lowest index i such that (o==null ? get(i)==null : o.equals(get(i))) (if such an element
-   * exists). Returns true if this list contained the specified element (or equivalently, if this
+   * Removes the first occurrence of the specified element from this list, if it
+   * is present. If the
+   * list does not contain the element, it is unchanged. More formally, removes
+   * the element with the
+   * lowest index i such that (o==null ? get(i)==null : o.equals(get(i))) (if such
+   * an element
+   * exists). Returns true if this list contained the specified element (or
+   * equivalently, if this
    * list changed as a result of the call).
    */
   public boolean remove(E obj) {
@@ -119,12 +130,19 @@ public class MyArrayList<E> {
   }
 
   /*
-   * For testing; your string should output as "[X, X, X, X, ...]" where X, X, X, X, ... are the
-   * elements in the ArrayList. If the array is empty, it should return "[]". If there is one
+   * For testing; your string should output as "[X, X, X, X, ...]" where X, X, X,
+   * X, ... are the
+   * elements in the ArrayList. If the array is empty, it should return "[]". If
+   * there is one
    * element, "[X]", etc. Elements are separated by a comma and a space.
    */
   public String toString() {
-    /* ---- YOUR CODE HERE ---- */
+    String ret = "[";
+    for (int i = 0; i < objectCount - 1; i++) {
+      ret += "" + internalArray[i].toString() + ",";
+    }
+    ret += "" + internalArray[objectCount].toString() + "]";
+    return ret;
   }
 
 }
