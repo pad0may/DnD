@@ -1,4 +1,5 @@
-/* See ArrayList documentation here:
+/*
+ * See ArrayList documentation here:
  * http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html
  */
 
@@ -51,8 +52,7 @@ public class MyArrayList<E> {
   }
 
   /*
-   * Returns true if this list contains an element equal to obj;
-   * otherwise returns false.
+   * Returns true if this list contains an element equal to obj; otherwise returns false.
    */
   public boolean contains(E obj) {
     for (int i = 0; i < internalArray.length; i++) {
@@ -80,34 +80,48 @@ public class MyArrayList<E> {
   /* Add an object to the end of the list; returns true */
   @SuppressWarnings("unchecked")
   public boolean add(E obj) {
-    if (condition) {
-
+    for (int i = 0; i < internalArray.length; i++) {
+      if (internalArray[i] == null) {
+        internalArray[i] = obj;
+      } else {
+        doubleArray();
+        internalArray[i + 1] = obj;
+      }
     }
+    return true;
   }
 
   /* Remove the object at index and shift. Returns removed object. */
   public E remove(int index) {
-    /* ---- YOUR CODE HERE ---- */
+    E ret = internalArray[index];
+    for (int i = index; i < objectCount; i++) {
+      internalArray[i] = internalArray[i + 1];
+    }
+    objectCount--;
+    return ret;
   }
 
   /*
-   * Removes the first occurrence of the specified element from this list,
-   * if it is present. If the list does not contain the element, it is unchanged.
-   * More formally, removes the element with the lowest index i such that
-   * (o==null ? get(i)==null : o.equals(get(i))) (if such an element exists).
-   * Returns true if this list contained the specified element (or equivalently,
-   * if this list changed as a result of the call).
+   * Removes the first occurrence of the specified element from this list, if it is present. If the
+   * list does not contain the element, it is unchanged. More formally, removes the element with the
+   * lowest index i such that (o==null ? get(i)==null : o.equals(get(i))) (if such an element
+   * exists). Returns true if this list contained the specified element (or equivalently, if this
+   * list changed as a result of the call).
    */
   public boolean remove(E obj) {
-    /* ---- YOUR CODE HERE ---- */
+    for (int i = 0; i < objectCount; i++) {
+      if (internalArray[i].equals(obj)) {
+        remove(i);
+        return true;
+      }
+    }
+    return false;
   }
 
   /*
-   * For testing; your string should output as "[X, X, X, X, ...]" where X, X, X,
-   * X, ... are the elements in the ArrayList.
-   * If the array is empty, it should return "[]". If there is one element, "[X]",
-   * etc.
-   * Elements are separated by a comma and a space.
+   * For testing; your string should output as "[X, X, X, X, ...]" where X, X, X, X, ... are the
+   * elements in the ArrayList. If the array is empty, it should return "[]". If there is one
+   * element, "[X]", etc. Elements are separated by a comma and a space.
    */
   public String toString() {
     /* ---- YOUR CODE HERE ---- */
