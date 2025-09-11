@@ -35,25 +35,30 @@ public class MyArrayList<E> {
   /* Are there zero objects in the array list? */
   public boolean isEmpty() {
     if (objectCount == 0)
-      return false;
-    return true;
+      return true;
+    return false;
   }
 
   /* Get the index-th object in the list. */
   public E get(int index) {
+    if (index > objectCount) {
+      throw new IndexOutOfBoundsException();
+    }
     return internalArray[index];
   }
 
   /* Replace the object at index with obj. returns object that was replaced. */
   public E set(int index, E obj) {
+    if (internalArray[index] == null) {
+      objectCount++;
+    }
     E temp = internalArray[index];
     internalArray[index] = obj;
     return temp;
   }
 
   /*
-   * Returns true if this list contains an element equal to obj; otherwise returns
-   * false.
+   * Returns true if this list contains an element equal to obj; otherwise returns false.
    */
   public boolean contains(E obj) {
     for (int i = 0; i < internalArray.length; i++) {
@@ -78,10 +83,11 @@ public class MyArrayList<E> {
     if (objectCount == internalArray.length) {
       doubleArray();
     }
-    for (int i = index; i < objectCount; i++) {
-      internalArray[i + 1] = internalArray[i];
+    for (int i = objectCount + 1; i > index; i--) {
+      internalArray[i] = internalArray[i - 1];
     }
     internalArray[index] = obj;
+    objectCount++;
   }
 
   /* Add an object to the end of the list; returns true */
@@ -106,14 +112,10 @@ public class MyArrayList<E> {
   }
 
   /*
-   * Removes the first occurrence of the specified element from this list, if it
-   * is present. If the
-   * list does not contain the element, it is unchanged. More formally, removes
-   * the element with the
-   * lowest index i such that (o==null ? get(i)==null : o.equals(get(i))) (if such
-   * an element
-   * exists). Returns true if this list contained the specified element (or
-   * equivalently, if this
+   * Removes the first occurrence of the specified element from this list, if it is present. If the
+   * list does not contain the element, it is unchanged. More formally, removes the element with the
+   * lowest index i such that (o==null ? get(i)==null : o.equals(get(i))) (if such an element
+   * exists). Returns true if this list contained the specified element (or equivalently, if this
    * list changed as a result of the call).
    */
   public boolean remove(E obj) {
@@ -127,18 +129,16 @@ public class MyArrayList<E> {
   }
 
   /*
-   * For testing; your string should output as "[X, X, X, X, ...]" where X, X, X,
-   * X, ... are the
-   * elements in the ArrayList. If the array is empty, it should return "[]". If
-   * there is one
+   * For testing; your string should output as "[X, X, X, X, ...]" where X, X, X, X, ... are the
+   * elements in the ArrayList. If the array is empty, it should return "[]". If there is one
    * element, "[X]", etc. Elements are separated by a comma and a space.
    */
   public String toString() {
     String ret = "[";
     for (int i = 0; i < objectCount - 1; i++) {
-      ret += "" + internalArray[i].toString() + ",";
+      ret += "" + internalArray[i].toString() + ", ";
     }
-    ret += "" + internalArray[objectCount].toString() + "]";
+    ret += "" + internalArray[objectCount - 1].toString() + "]";
     return ret;
   }
 
