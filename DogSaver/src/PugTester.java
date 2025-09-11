@@ -17,7 +17,7 @@ public class PugTester {
 
     long timeStart = System.nanoTime();
 
-    for (int i = 0; i < 1000000000 / 2; i++) {
+    for (int i = 0; i < 100000000 / 2; i++) {
       list.add(dog1);
       list.add(dog2);
       // list.add(dog3);

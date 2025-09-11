@@ -49,6 +49,7 @@ public class MyArrayList<E> {
 
   /* Replace the object at index with obj. returns object that was replaced. */
   public E set(int index, E obj) {
+    checkIndex(index);
     if (internalArray[index] == null) {
       objectCount++;
     }
@@ -75,6 +76,12 @@ public class MyArrayList<E> {
       finArray[i] = internalArray[i];
     }
     internalArray = finArray;
+  }
+
+  public void checkIndex(int index) {
+    if (index > objectCount) {
+      throw new IndexOutOfBoundsException();
+    }
   }
 
   /* Insert an object at index */

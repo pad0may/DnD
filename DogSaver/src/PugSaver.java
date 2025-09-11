@@ -27,6 +27,9 @@ public class PugSaver {
 
   public static void rescuePugs(MyArrayList<Dog> list) {
     MyArrayList<Dog> retList = new MyArrayList<>(list.size());
+    for (int i = 0; i < list.size(); i++) {
+      retList.add(list.get(i));
+    }
     int golden = 0;
     int other = 0;
     for (int i = 0; i < list.size(); i++) {
@@ -45,8 +48,9 @@ public class PugSaver {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public static void rescuePugs(ArrayList<Dog> list) {
-    ArrayList<Dog> retList = new ArrayList<>(list.size());
+    ArrayList<Dog> retList = (ArrayList<Dog>) list.clone();
     int golden = 0;
     int other = 0;
     for (int i = 0; i < list.size(); i++) {
