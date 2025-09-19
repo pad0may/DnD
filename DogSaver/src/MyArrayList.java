@@ -41,18 +41,13 @@ public class MyArrayList<E> {
 
   /* Get the index-th object in the list. */
   public E get(int index) {
-    if (index > objectCount) {
-      throw new IndexOutOfBoundsException();
-    }
+    checkIndex(index);
     return internalArray[index];
   }
 
   /* Replace the object at index with obj. returns object that was replaced. */
   public E set(int index, E obj) {
     checkIndex(index);
-    if (internalArray[index] == null) {
-      objectCount++;
-    }
     E temp = internalArray[index];
     internalArray[index] = obj;
     return temp;
@@ -63,6 +58,9 @@ public class MyArrayList<E> {
    */
   public boolean contains(E obj) {
     for (int i = 0; i < internalArray.length; i++) {
+      if (internalArray[i] == null) {
+        return false;
+      }
       if (internalArray[i].equals(obj))
         return true;
     }
@@ -79,7 +77,7 @@ public class MyArrayList<E> {
   }
 
   public void checkIndex(int index) {
-    if (index > objectCount) {
+    if (index >= objectCount) {
       throw new IndexOutOfBoundsException();
     }
   }
@@ -87,6 +85,7 @@ public class MyArrayList<E> {
   /* Insert an object at index */
   @SuppressWarnings("unchecked")
   public void add(int index, E obj) {
+    checkIndex(index);
     if (objectCount == internalArray.length) {
       doubleArray();
     }
@@ -110,6 +109,7 @@ public class MyArrayList<E> {
 
   /* Remove the object at index and shift. Returns removed object. */
   public E remove(int index) {
+    checkIndex(index);
     E ret = internalArray[index];
     for (int i = index; i < objectCount; i++) {
       internalArray[i] = internalArray[i + 1];
