@@ -11,7 +11,9 @@ public class ListTester {
         list.add(str1);
         list.add(str2);
 
-        list.remove(1);
+        list.add(3, str1);
+
+        System.out.println(list.toString());
 
     }
 }

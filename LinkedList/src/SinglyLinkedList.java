@@ -47,8 +47,11 @@ public class SinglyLinkedList<E> {
 	// otherwise returns false.
 	public boolean contains(E obj) {
 		for (ListNode i = head; i == tail; i = i.getNext()) {
-
+			if (i.getValue().equals(obj)) {
+				return true;
+			}
 		}
+		return false;
 	}
 
 	// Returns the index of the first element in equal to obj;
@@ -65,33 +68,40 @@ public class SinglyLinkedList<E> {
 	// Adds obj to this collection. Returns true if successful;
 	// otherwise returns false.
 	public boolean add(E obj) {
-		try {
-			ListNode node = new ListNode<E>(obj);
-			if (nodeCount == 0) {
-				head = node;
-				tail = node;
-			}
-			tail.setNext(node);
+		ListNode node = new ListNode<E>(obj);
+		if (nodeCount == 0) {
+			head = node;
 			tail = node;
-			nodeCount++;
-			return true;
-		} catch (Exception e) {
-			return false;
 		}
-
-
+		tail.setNext(node);
+		tail = node;
+		nodeCount++;
+		return true;
 	}
 
 	// Removes the first element that is equal to obj, if any.
 	// Returns true if successful; otherwise returns false.
 	public boolean remove(E obj) {
-		for (ListNode i = head; i.getValue() == obj; i = i.getNext()) {
-
+		if (head.getValue().equals(obj)) {
+			head = head.getNext();
+			nodeCount--;
+			return true;
 		}
+		for (ListNode i = head; i.getValue() == obj; i = i.getNext()) {
+			if (i.getValue().equals(obj)) {
+				i.setNext(i.getNext().getNext());
+				if (i.getNext() == null) {
+					tail = i;
+				}
+				nodeCount--;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// Returns the i-th element.
-	public E get(int i) {
+	public E getObj(int i) {
 		ListNode temp = head;
 		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
@@ -99,26 +109,75 @@ public class SinglyLinkedList<E> {
 		return (E) temp;
 	}
 
+	public E get(int i) {
+		ListNode temp = head;
+		for (int j = 0; j < i; j++) {
+			temp = temp.getNext();
+		}
+		return (E) temp.getValue();
+	}
+
+
 	// Replaces the i-th element with obj and returns the old value.
-	public E set(int i, Object obj) {}
+	public E set(int i, Object obj) {
+		ListNode temp = (ListNode) getObj(i);
+		E ret = (E) temp.getValue();
+		temp.setValue(obj);
+		return ret;
+	}
 
 	// Inserts obj to become the i-th element. Increments the size
 	// of the list by one.
-	public void add(int i, Object obj) {}
+	public void add(int i, Object obj) {
+		ListNode add = new ListNode<>(obj);
+		if (i == 0) {
+			add.setNext(head);
+			head = add;
+			nodeCount++;
+			return;
+		}
+		add.setNext(((ListNode<E>) getObj(i + 1)));
+		((ListNode<E>) getObj(i)).setNext(add);
+		if (i == size()) {
+			tail = add;
+		}
+		nodeCount++;
+	}
 
 	// Removes the i-th element and returns its value.
 	// Decrements the size of the list by one.
 	public E remove(int i) {
-		ListNode temp = (ListNode) get(i - 1);
+		if (i == 0) {
+			ListNode ret = head;
+			head = head.getNext();
+			return (E) ret;
+		}
+		ListNode temp = (ListNode) getObj(i - 1);
+		ListNode ret = temp.getNext();
 		temp.setNext(temp.getNext().getNext());
+		if (i == size()) {
+			tail = temp;
+		}
 		nodeCount--;
-		return (E) temp;
+		return (E) ret.getValue();
 	}
+
+	/*
+	 * if first position, set next to be the head
+	 * 
+	 */
 
 	// Returns a string representation of this list exactly like that for MyArrayList.
 	public String toString() {
-
-
+		StringBuilder ret = new StringBuilder();
+		ret.append("[");
+		for (ListNode i = head; i != tail; i = i.getNext()) {
+			ret.append(i.getValue());
+			ret.append(", ");
+		}
+		ret.append(tail.getValue());
+		ret.append("]");
+		return ret.toString();
 	}
 
 
