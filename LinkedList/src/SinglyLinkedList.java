@@ -46,7 +46,7 @@ public class SinglyLinkedList<E> {
 	// Returns true if this list contains an element equal to obj;
 	// otherwise returns false.
 	public boolean contains(E obj) {
-		for (ListNode i = head; i == tail; i = i.getNext()) {
+		for (ListNode i = head; i != null; i = i.getNext()) {
 			if (i.getValue().equals(obj)) {
 				return true;
 			}
@@ -87,15 +87,16 @@ public class SinglyLinkedList<E> {
 			nodeCount--;
 			return true;
 		}
-		for (ListNode i = head; i.getValue() == obj; i = i.getNext()) {
-			if (i.getValue().equals(obj)) {
-				i.setNext(i.getNext().getNext());
-				if (i.getNext() == null) {
-					tail = i;
-				}
+		for (int i = 0; i < size(); i++) {
+			if (((ListNode<E>) getObj(i)).getNext().getValue().equals(obj)) {
+				((ListNode<E>) getObj(i)).setNext(((ListNode<E>) getObj(i)).getNext().getNext());
 				nodeCount--;
+				if (i + 1 == size()) {
+					tail = (ListNode<E>) getObj(i);
+				}
 				return true;
 			}
+
 		}
 		return false;
 	}
@@ -111,6 +112,9 @@ public class SinglyLinkedList<E> {
 
 	public E get(int i) {
 		ListNode temp = head;
+		if (i >= size()) {
+			throw new IndexOutOfBoundsException();
+		}
 		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
 		}
@@ -136,8 +140,8 @@ public class SinglyLinkedList<E> {
 			nodeCount++;
 			return;
 		}
-		add.setNext(((ListNode<E>) getObj(i + 1)));
-		((ListNode<E>) getObj(i)).setNext(add);
+		add.setNext(((ListNode<E>) getObj(i)));
+		((ListNode<E>) getObj(i - 1)).setNext(add);
 		if (i == size()) {
 			tail = add;
 		}
@@ -161,11 +165,6 @@ public class SinglyLinkedList<E> {
 		nodeCount--;
 		return (E) ret.getValue();
 	}
-
-	/*
-	 * if first position, set next to be the head
-	 * 
-	 */
 
 	// Returns a string representation of this list exactly like that for MyArrayList.
 	public String toString() {
