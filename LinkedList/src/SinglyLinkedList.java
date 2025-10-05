@@ -17,8 +17,17 @@ public class SinglyLinkedList<E> {
 	// Constructor: creates a list that contains
 	// all elements from the array values, in the same order
 	public SinglyLinkedList(Object[] values) {
-		for (int i = 0; i < values.length; i++) {
-			add((E) values[i]);
+		// if (values == null) {
+		// throw new NullPointerException();
+		// }
+		if (values.length == 0 || values == null) {
+			this.head = null;
+			this.tail = null;
+			nodeCount = 0;
+		} else {
+			for (int i = 0; i < values.length; i++) {
+				add((E) values[i]);
+			}
 		}
 	}
 
@@ -46,10 +55,19 @@ public class SinglyLinkedList<E> {
 	// Returns true if this list contains an element equal to obj;
 	// otherwise returns false.
 	public boolean contains(E obj) {
-		for (ListNode i = head; i != null; i = i.getNext()) {
-			if (i.getValue().equals(obj)) {
-				return true;
-			}
+		// for (ListNode i = head; i != null; i = i.getNext()) {
+		// if ((i.getValue() == null && obj == null)
+		// || (i.getValue() != null && i.getValue().equals(obj))) {
+		// return true;
+		// }
+		// }
+		// return false;
+		if ((head.getValue() == null && obj == null)
+				|| (head.getValue() != null && head.getValue().equals(obj))) {
+			return true;
+		}
+		if (indexOf(obj) >= 0) {
+			return true;
 		}
 		return false;
 	}
@@ -58,11 +76,20 @@ public class SinglyLinkedList<E> {
 	// if not found, returns -1.
 	public int indexOf(E obj) {
 		int ret = 0;
-		for (ListNode i = head; i.getValue() == obj; i = i.getNext()) {
-			ret++;
+		if ((head.getValue() == null && obj == null)
+				|| (head.getValue() != null && head.getValue().equals(obj))) {
+			return 0;
 		}
-		return ret;
-
+		ListNode temp = head;
+		while (temp.getNext() != null) {
+			if ((temp.getValue() == null && obj == null)
+					|| (temp.getValue() != null && temp.getValue().equals(obj))) {
+				return ret;
+			}
+			ret++;
+			temp = temp.getNext();
+		}
+		return -1;
 	}
 
 	// Adds obj to this collection. Returns true if successful;
@@ -72,6 +99,7 @@ public class SinglyLinkedList<E> {
 		if (nodeCount == 0) {
 			head = node;
 			tail = node;
+			// nodeCount++;
 		}
 		tail.setNext(node);
 		tail = node;
@@ -81,13 +109,137 @@ public class SinglyLinkedList<E> {
 
 	// Removes the first element that is equal to obj, if any.
 	// Returns true if successful; otherwise returns false.
+	public boolean remove2(E obj) {
+		// if (((head.getValue() != null && head.getValue().equals(obj)) && nodeCount == 1)) {
+		// head = null;
+		// tail = null;
+		// nodeCount--;
+		// return true;
+		// }
+
+		// for (ListNode i = head; i.getNext() != null; i = i.getNext()) {
+
+		/*
+		 * // if (obj != null && i.getNext().getValue() == null) { // i = i.getNext(); // } // if
+		 * (((obj == null && i.getNext().getValue() == null)) // ||
+		 * i.getNext().getValue().equals(obj)) { // if (i.getNext().equals(tail)) { //
+		 * i.setNext(null); // tail = i; // nodeCount--; // return true; // } //
+		 * i.getNext().setValue(i.getNext().getNext().getValue()); //
+		 * i.getNext().setNext(i.getNext().getNext().getNext()); // return true; // }
+		 */
+
+		// if ((i.getValue() == null && obj == null) || (i.getValue() == null && obj != null)
+		// || (i.getValue() != null && i.getValue().equals(obj))) {
+		// if (i == head) {
+		// head = i.getNext();
+		// nodeCount--;
+		// return true;
+		// }
+		// i.setValue(i.getNext().getValue());
+		// i.setNext(i.getNext().getNext());
+		// nodeCount--;
+		// return true;
+		// }
+		// if (((i.getNext().getValue() == null && obj == null)
+		// || (i.getNext().getValue() == null && obj != null)
+		// || ((i.getNext().getValue() != null && i.getNext().getValue().equals(obj))
+		// && i.getNext() == tail))) {
+		// i.setNext(null);
+		// tail = i;
+		// nodeCount--;
+		// return true;
+		// }
+		// }
+		// return false;
+
+		// if (head.getValue().equals(obj)) {
+		// head = head.getNext();
+		// nodeCount--;
+		// return true;
+		// }
+		// for (ListNode i = head; i != null; i = i.getNext()) {
+		// if (i.getNext().getValue().equals(obj)) {
+		// if ((i.getNext().getValue().equals(obj)) && i.getNext() == tail) {
+		// tail = i;
+		// i.setNext(null);
+		// nodeCount--;
+		// return true;
+		// }
+		// i.setNext(i.getNext().getNext());
+		// nodeCount--;
+		// return true;
+		// }
+		// }
+		// return false;
+
+
+		// if (head == null || head.getValue() == null) {
+		// throw new NullPointerException();
+		// }
+		if ((head.getValue() == null && obj == null)
+				|| (head.getValue() != null && head.getValue().equals(obj))) {
+			head = head.getNext();
+			nodeCount--;
+			return true;
+		}
+		ListNode temp = head;
+		while (temp.getNext() != null) {
+			// if (temp.getNext().getValue() == null) {
+			// throw new NullPointerException();
+			// }
+			if ((temp.getNext().getValue() == null && obj == null)
+					|| (temp.getNext().getValue() != null
+							&& temp.getNext().getValue().equals(obj))) {
+				if (temp.getNext().getNext() == null) {
+					tail = temp;
+					nodeCount--;
+					return true;
+				}
+				temp.setNext(temp.getNext().getNext());
+				nodeCount--;
+				return true;
+			}
+			temp = temp.getNext();
+		}
+		return false;
+	}
+
 	public boolean remove(E obj) {
 		if (head.getValue().equals(obj)) {
 			head = head.getNext();
 			nodeCount--;
 			return true;
 		}
+		ListNode temp = head;
 		for (int i = 0; i < size(); i++) {
+			if ((temp.getNext().getValue() == null && obj == null)
+					|| (temp.getNext().getValue() != null
+							&& temp.getNext().getValue().equals(obj))) {
+				temp.setNext(temp.getNext().getNext());
+				nodeCount--;
+				if (i + 1 == size()) {
+					tail = (ListNode<E>) getObj(i);
+				}
+				return true;
+			}
+			temp = temp.getNext();
+		}
+		return false;
+	}
+
+	public boolean remove3(E obj) {
+		if (head == null) {
+			throw new NullPointerException();
+		}
+		if (head.getValue().equals(obj)) {
+			head = head.getNext();
+			nodeCount--;
+			return true;
+		}
+		for (int i = 0; i < size(); i++) {
+			if (getObj(i) == null) {
+				throw new NullPointerException();
+			}
 			if (((ListNode<E>) getObj(i)).getNext().getValue().equals(obj)) {
 				((ListNode<E>) getObj(i)).setNext(((ListNode<E>) getObj(i)).getNext().getNext());
 				nodeCount--;
@@ -96,13 +248,14 @@ public class SinglyLinkedList<E> {
 				}
 				return true;
 			}
-
 		}
 		return false;
 	}
 
 	// Returns the i-th element.
 	public E getObj(int i) {
+		if (i >= nodeCount || i < 0)
+			throw new IndexOutOfBoundsException();
 		ListNode temp = head;
 		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
@@ -111,10 +264,12 @@ public class SinglyLinkedList<E> {
 	}
 
 	public E get(int i) {
-		ListNode temp = head;
-		if (i >= size()) {
+		if (i >= nodeCount || i < 0)
 			throw new IndexOutOfBoundsException();
+		if (i == 0) {
+			return (E) head.getValue();
 		}
+		ListNode temp = head;
 		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
 		}
@@ -124,6 +279,13 @@ public class SinglyLinkedList<E> {
 
 	// Replaces the i-th element with obj and returns the old value.
 	public E set(int i, Object obj) {
+		if (i >= nodeCount || i < 0)
+			throw new IndexOutOfBoundsException();
+		if (i == 0) {
+			E ret = head.getValue();
+			head.setValue((E) obj);
+			return ret;
+		}
 		ListNode temp = (ListNode) getObj(i);
 		E ret = (E) temp.getValue();
 		temp.setValue(obj);
@@ -133,6 +295,8 @@ public class SinglyLinkedList<E> {
 	// Inserts obj to become the i-th element. Increments the size
 	// of the list by one.
 	public void add(int i, Object obj) {
+		if (i >= nodeCount || i < 0)
+			throw new IndexOutOfBoundsException();
 		ListNode add = new ListNode<>(obj);
 		if (i == 0) {
 			add.setNext(head);
@@ -151,6 +315,8 @@ public class SinglyLinkedList<E> {
 	// Removes the i-th element and returns its value.
 	// Decrements the size of the list by one.
 	public E remove(int i) {
+		if (i >= nodeCount || i < 0)
+			throw new IndexOutOfBoundsException();
 		if (i == 0) {
 			ListNode ret = head;
 			head = head.getNext();
@@ -159,7 +325,7 @@ public class SinglyLinkedList<E> {
 		ListNode temp = (ListNode) getObj(i - 1);
 		ListNode ret = temp.getNext();
 		temp.setNext(temp.getNext().getNext());
-		if (i == size()) {
+		if (i == size() - 1) {
 			tail = temp;
 		}
 		nodeCount--;
