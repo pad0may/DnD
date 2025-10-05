@@ -17,10 +17,10 @@ public class SinglyLinkedList<E> {
 	// Constructor: creates a list that contains
 	// all elements from the array values, in the same order
 	public SinglyLinkedList(Object[] values) {
-		// if (values == null) {
-		// throw new NullPointerException();
-		// }
-		if (values.length == 0 || values == null) {
+		if (values == null) {
+			throw new NullPointerException();
+		}
+		if (values.length == 0) {
 			this.head = null;
 			this.tail = null;
 			nodeCount = 0;
@@ -41,7 +41,7 @@ public class SinglyLinkedList<E> {
 
 	// Returns true if this list is empty; otherwise returns false.
 	public boolean isEmpty() {
-		if (nodeCount == 0) {
+		if (head == null) {
 			return true;
 		}
 		return false;
@@ -55,17 +55,6 @@ public class SinglyLinkedList<E> {
 	// Returns true if this list contains an element equal to obj;
 	// otherwise returns false.
 	public boolean contains(E obj) {
-		// for (ListNode i = head; i != null; i = i.getNext()) {
-		// if ((i.getValue() == null && obj == null)
-		// || (i.getValue() != null && i.getValue().equals(obj))) {
-		// return true;
-		// }
-		// }
-		// return false;
-		if ((head.getValue() == null && obj == null)
-				|| (head.getValue() != null && head.getValue().equals(obj))) {
-			return true;
-		}
 		if (indexOf(obj) >= 0) {
 			return true;
 		}
@@ -75,11 +64,11 @@ public class SinglyLinkedList<E> {
 	// Returns the index of the first element in equal to obj;
 	// if not found, returns -1.
 	public int indexOf(E obj) {
-		int ret = 0;
 		if ((head.getValue() == null && obj == null)
 				|| (head.getValue() != null && head.getValue().equals(obj))) {
 			return 0;
 		}
+		int ret = 0;
 		ListNode temp = head;
 		while (temp.getNext() != null) {
 			if ((temp.getValue() == null && obj == null)
@@ -99,155 +88,41 @@ public class SinglyLinkedList<E> {
 		if (nodeCount == 0) {
 			head = node;
 			tail = node;
-			// nodeCount++;
+		} else {
+			tail.setNext(node);
+			tail = node;
 		}
-		tail.setNext(node);
-		tail = node;
 		nodeCount++;
 		return true;
 	}
 
 	// Removes the first element that is equal to obj, if any.
 	// Returns true if successful; otherwise returns false.
-	public boolean remove2(E obj) {
-		// if (((head.getValue() != null && head.getValue().equals(obj)) && nodeCount == 1)) {
-		// head = null;
-		// tail = null;
-		// nodeCount--;
-		// return true;
-		// }
 
-		// for (ListNode i = head; i.getNext() != null; i = i.getNext()) {
-
-		/*
-		 * // if (obj != null && i.getNext().getValue() == null) { // i = i.getNext(); // } // if
-		 * (((obj == null && i.getNext().getValue() == null)) // ||
-		 * i.getNext().getValue().equals(obj)) { // if (i.getNext().equals(tail)) { //
-		 * i.setNext(null); // tail = i; // nodeCount--; // return true; // } //
-		 * i.getNext().setValue(i.getNext().getNext().getValue()); //
-		 * i.getNext().setNext(i.getNext().getNext().getNext()); // return true; // }
-		 */
-
-		// if ((i.getValue() == null && obj == null) || (i.getValue() == null && obj != null)
-		// || (i.getValue() != null && i.getValue().equals(obj))) {
-		// if (i == head) {
-		// head = i.getNext();
-		// nodeCount--;
-		// return true;
-		// }
-		// i.setValue(i.getNext().getValue());
-		// i.setNext(i.getNext().getNext());
-		// nodeCount--;
-		// return true;
-		// }
-		// if (((i.getNext().getValue() == null && obj == null)
-		// || (i.getNext().getValue() == null && obj != null)
-		// || ((i.getNext().getValue() != null && i.getNext().getValue().equals(obj))
-		// && i.getNext() == tail))) {
-		// i.setNext(null);
-		// tail = i;
-		// nodeCount--;
-		// return true;
-		// }
-		// }
-		// return false;
-
-		// if (head.getValue().equals(obj)) {
-		// head = head.getNext();
-		// nodeCount--;
-		// return true;
-		// }
-		// for (ListNode i = head; i != null; i = i.getNext()) {
-		// if (i.getNext().getValue().equals(obj)) {
-		// if ((i.getNext().getValue().equals(obj)) && i.getNext() == tail) {
-		// tail = i;
-		// i.setNext(null);
-		// nodeCount--;
-		// return true;
-		// }
-		// i.setNext(i.getNext().getNext());
-		// nodeCount--;
-		// return true;
-		// }
-		// }
-		// return false;
-
-
-		// if (head == null || head.getValue() == null) {
-		// throw new NullPointerException();
-		// }
+	public boolean remove(E obj) {
 		if ((head.getValue() == null && obj == null)
 				|| (head.getValue() != null && head.getValue().equals(obj))) {
 			head = head.getNext();
 			nodeCount--;
+			if (nodeCount == 0) {
+				head = null;
+				tail = null;
+			}
 			return true;
 		}
 		ListNode temp = head;
-		while (temp.getNext() != null) {
-			// if (temp.getNext().getValue() == null) {
-			// throw new NullPointerException();
-			// }
+		for (int i = 0; i < size() - 1; i++) {
 			if ((temp.getNext().getValue() == null && obj == null)
 					|| (temp.getNext().getValue() != null
 							&& temp.getNext().getValue().equals(obj))) {
-				if (temp.getNext().getNext() == null) {
+				temp.setNext(temp.getNext().getNext());
+				nodeCount--;
+				if (i + 1 == size()) {
 					tail = temp;
-					nodeCount--;
-					return true;
-				}
-				temp.setNext(temp.getNext().getNext());
-				nodeCount--;
-				return true;
-			}
-			temp = temp.getNext();
-		}
-		return false;
-	}
-
-	public boolean remove(E obj) {
-		if (head.getValue().equals(obj)) {
-			head = head.getNext();
-			nodeCount--;
-			return true;
-		}
-		ListNode temp = head;
-		for (int i = 0; i < size(); i++) {
-			if ((temp.getNext().getValue() == null && obj == null)
-					|| (temp.getNext().getValue() != null
-							&& temp.getNext().getValue().equals(obj))) {
-				temp.setNext(temp.getNext().getNext());
-				nodeCount--;
-				if (i + 1 == size()) {
-					tail = (ListNode<E>) getObj(i);
 				}
 				return true;
 			}
 			temp = temp.getNext();
-		}
-		return false;
-	}
-
-	public boolean remove3(E obj) {
-		if (head == null) {
-			throw new NullPointerException();
-		}
-		if (head.getValue().equals(obj)) {
-			head = head.getNext();
-			nodeCount--;
-			return true;
-		}
-		for (int i = 0; i < size(); i++) {
-			if (getObj(i) == null) {
-				throw new NullPointerException();
-			}
-			if (((ListNode<E>) getObj(i)).getNext().getValue().equals(obj)) {
-				((ListNode<E>) getObj(i)).setNext(((ListNode<E>) getObj(i)).getNext().getNext());
-				nodeCount--;
-				if (i + 1 == size()) {
-					tail = (ListNode<E>) getObj(i);
-				}
-				return true;
-			}
 		}
 		return false;
 	}
@@ -295,7 +170,11 @@ public class SinglyLinkedList<E> {
 	// Inserts obj to become the i-th element. Increments the size
 	// of the list by one.
 	public void add(int i, Object obj) {
-		if (i >= nodeCount || i < 0)
+		if ((i == 0 && nodeCount == 0) || i == nodeCount) {
+			add((E) obj);
+			return;
+		}
+		if (i > nodeCount || i < 0)
 			throw new IndexOutOfBoundsException();
 		ListNode add = new ListNode<>(obj);
 		if (i == 0) {
@@ -320,6 +199,7 @@ public class SinglyLinkedList<E> {
 		if (i == 0) {
 			ListNode ret = head;
 			head = head.getNext();
+			nodeCount--;
 			return (E) ret;
 		}
 		ListNode temp = (ListNode) getObj(i - 1);
@@ -334,8 +214,12 @@ public class SinglyLinkedList<E> {
 
 	// Returns a string representation of this list exactly like that for MyArrayList.
 	public String toString() {
+		if (head == null) {
+			return "[]";
+		}
 		StringBuilder ret = new StringBuilder();
 		ret.append("[");
+
 		for (ListNode i = head; i != tail; i = i.getNext()) {
 			ret.append(i.getValue());
 			ret.append(", ");
