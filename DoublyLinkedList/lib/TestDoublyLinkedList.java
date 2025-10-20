@@ -78,9 +78,9 @@ public class TestDoublyLinkedList {
         // System.out.println(list);
 
         list.add(2, Nucleotide.T);
-        System.out.println(list.getNode(2).getValue());
-        System.out.println(list.getNode(2).getPrevious().getValue());
-        System.out.println(list.getNode(2).getNext().getValue());
+        // System.out.println(list.getNode(2).getValue());
+        // System.out.println(list.getNode(2).getPrevious().getValue());
+        // System.out.println(list.getNode(2).getNext().getValue());
 
         // System.out.println(list.set(1, T));
 
@@ -89,7 +89,10 @@ public class TestDoublyLinkedList {
         // list.remove(7);
         // System.out.println(list.get(8));
 
-        // System.out.println(list);
+        System.out.println(list);
+
+        // list.deleteLastThree();
+        // System.out.println(list2);
         // System.out.println(list.size());
     }
 }

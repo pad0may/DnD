@@ -8,16 +8,23 @@ public class DoublyLinkedList {
 
 	// Constructor: creates an empty list
 	public DoublyLinkedList() {
-		nodeCount = 0;
+		this.nodeCount = 0;
 	}
 
 	// Constructor: creates a list that contains
 	// all elements from the array values, in the same order
 	public DoublyLinkedList(Nucleotide[] values) {
-		this();
+		if (values == null) {
+			throw new NullPointerException();
+		}
+		this.nodeCount = 0;
 		SENTINEL.setNext(SENTINEL);
 		SENTINEL.setPrevious(SENTINEL);
 		for (Nucleotide nucleotide : values) {
+			if ((nucleotide != Nucleotide.A) || (nucleotide != Nucleotide.C)
+					|| (nucleotide != Nucleotide.G) || (nucleotide != Nucleotide.T)) {
+				throw new IllegalArgumentException();
+			}
 			add(nucleotide);
 		}
 	}
@@ -112,7 +119,7 @@ public class DoublyLinkedList {
 
 	// Returns the i-th element.
 	public Nucleotide get(int i) {
-		if (i >= size()) {
+		if (i >= size() || i < 0) {
 			throw new IndexOutOfBoundsException();
 		}
 		ListNode2 temp = getNode(i);
@@ -134,6 +141,9 @@ public class DoublyLinkedList {
 
 	// Replaces the i-th element with obj and returns the old value.
 	public Nucleotide set(int i, Nucleotide obj) {
+		if (i >= nodeCount || i < 0) {
+			throw new IndexOutOfBoundsException();
+		}
 		ListNode2 temp = getNode(i);
 		Nucleotide tempNuc = (Nucleotide) temp.getValue();
 		temp.setValue(obj);
@@ -144,6 +154,9 @@ public class DoublyLinkedList {
 	// of the list by one.
 	@SuppressWarnings("unchecked")
 	public void add(int i, Nucleotide obj) {
+		if (i > nodeCount || i < 0) {
+			throw new IndexOutOfBoundsException();
+		}
 		ListNode2 add = new ListNode2<>(obj);
 		if (i == 0) {
 			add.setNext(SENTINEL.getNext());
@@ -152,7 +165,7 @@ public class DoublyLinkedList {
 			nodeCount++;
 			return;
 		}
-		if (i == size()) {
+		if (i == nodeCount) {
 			SENTINEL.getPrevious().setNext(add);
 			add.setPrevious(SENTINEL.getPrevious());
 			SENTINEL.setPrevious(add);
@@ -170,6 +183,9 @@ public class DoublyLinkedList {
 	// Removes the i-th element and returns its value.
 	// Decrements the size of the list by one.
 	public Nucleotide remove(int i) {
+		if (i >= nodeCount || i < 0) {
+			throw new IndexOutOfBoundsException();
+		}
 		ListNode2 temp = getNode(i);
 		temp.getPrevious().setNext(temp.getNext());
 		temp.getNext().setPrevious(temp.getPrevious());
