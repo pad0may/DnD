@@ -15,8 +15,10 @@ public class Recursion {
 	// Trying to infect outside the confines of the grid also has no effect
 	// Precondition: grid has no null entries
 	public static void infect(String[][] grid, int r, int c) {
-		if (!grid[r][c].equals("vaccinated")) {
+		if (!grid[r][c].equals("vaccinated") && !grid[r][c].equals("infected")) {
 			grid[r][c] = "infected";
+		} else {
+			return;
 		}
 		if (r > 0 && !grid[r - 1][c].equals("vaccinated")) {
 			// grid[r - 1][c] = "infected";
@@ -34,7 +36,6 @@ public class Recursion {
 			// grid[r][c + 1] = "infected";
 			infect(grid, r, c + 1);
 		}
-		return;
 	}
 
 	// How many subsets are there of the numbers 1...n
@@ -45,7 +46,7 @@ public class Recursion {
 	// {1,2}, {2,3}, {3,4}, {1,2,3}, {1,2,4}, {1,3,4}, {1,2,3,4}
 	// Precondition: n > 0
 	public static long countNonConsecutiveSubsets(int n) {
-
+		
 	}
 
 	// A kid at the bottom of the stairs can jump up 1, 2, or 3 stairs at a time.
