@@ -46,7 +46,9 @@ public class Recursion {
 	// {1,2}, {2,3}, {3,4}, {1,2,3}, {1,2,4}, {1,3,4}, {1,2,3,4}
 	// Precondition: n > 0
 	public static long countNonConsecutiveSubsets(int n) {
-		
+		if (n <= 1)
+			return n + 1;
+		return countNonConsecutiveSubsets(n - 1) + countNonConsecutiveSubsets(n - 2);
 	}
 
 	// A kid at the bottom of the stairs can jump up 1, 2, or 3 stairs at a time.
@@ -54,7 +56,10 @@ public class Recursion {
 	// Jumping 1-1-2 is considered different than jumping 1-2-1
 	// Precondition: n > 0
 	public static long countWaysToJumpUpStairs(int n) {
-
+		if (n <= 2) {
+			return n;
+		}
+		return n - 1 + countWaysToJumpUpStairs(n - 1);
 	}
 
 	// Everything above this line does NOT require a recursive helper method
@@ -69,9 +74,7 @@ public class Recursion {
 	// For example, subsets("abc") would print out "", "a", "b", "c", "ab", "ac",
 	// "bc", "abc"
 	// Order is your choice
-	public static void printSubsets(String str) {
-
-	}
+	public static void printSubsets(String str) {}
 
 	// List contains a single String to start.
 	// Prints all the permutations of str on separate lines
