@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Recursion {
 
 	// Prints the value of every node in the singly linked list with the given head,
@@ -56,10 +58,8 @@ public class Recursion {
 	// Jumping 1-1-2 is considered different than jumping 1-2-1
 	// Precondition: n > 0
 	public static long countWaysToJumpUpStairs(int n) {
-		if (n <= 2) {
-			return n;
-		}
-		return n - 1 + countWaysToJumpUpStairs(n - 1);
+		// if (n <= 2) return n;
+		// return n - 1 + countWaysToJumpUpStairs(n - 1);
 	}
 
 	// Everything above this line does NOT require a recursive helper method
@@ -74,7 +74,28 @@ public class Recursion {
 	// For example, subsets("abc") would print out "", "a", "b", "c", "ab", "ac",
 	// "bc", "abc"
 	// Order is your choice
-	public static void printSubsets(String str) {}
+	public static void printSubsets(String str) {
+		ArrayList<String> ret = subsetPrinter(new ArrayList<>(), str);
+		for (int i = 0; i < ret.size(); i++) {
+			System.out.println(ret.get(i));
+		}
+	}
+
+	private static ArrayList<String> subsetPrinter(ArrayList<String> arr, String str) {
+		ArrayList<String> array = new ArrayList<>();
+		arr.add(str.substring(0, 0));
+		arr.add(str.substring(0, 1));
+		if (str.length() <= 1) {
+			return arr;
+		}
+		for (int i = 0; i < arr.size(); i++) {
+			array.add(array.get(i) + str.substring(0, 1));
+		}
+		for (int i = 0; i < array.size(); i++) {
+			arr.add(array.get(i));
+		}
+		return subsetPrinter(array, str.substring(1));
+	}
 
 	// List contains a single String to start.
 	// Prints all the permutations of str on separate lines
