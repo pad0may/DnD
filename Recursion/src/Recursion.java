@@ -58,8 +58,9 @@ public class Recursion {
 	// Jumping 1-1-2 is considered different than jumping 1-2-1
 	// Precondition: n > 0
 	public static long countWaysToJumpUpStairs(int n) {
-		// if (n <= 2) return n;
-		// return n - 1 + countWaysToJumpUpStairs(n - 1);
+		if (n <= 2)
+			return n / 2 + 1;
+		return countWaysToJumpUpStairs(n - 1) + countWaysToJumpUpStairs(n - 2) + countWaysToJumpUpStairs(n - 3);
 	}
 
 	// Everything above this line does NOT require a recursive helper method
@@ -75,7 +76,9 @@ public class Recursion {
 	// "bc", "abc"
 	// Order is your choice
 	public static void printSubsets(String str) {
-		ArrayList<String> ret = subsetPrinter(new ArrayList<>(), str);
+		ArrayList<String> arr = new ArrayList<>();
+		arr.add("");
+		ArrayList<String> ret = subsetPrinter(arr, str);
 		for (int i = 0; i < ret.size(); i++) {
 			System.out.println(ret.get(i));
 		}
@@ -83,18 +86,16 @@ public class Recursion {
 
 	private static ArrayList<String> subsetPrinter(ArrayList<String> arr, String str) {
 		ArrayList<String> array = new ArrayList<>();
-		arr.add(str.substring(0, 0));
-		arr.add(str.substring(0, 1));
-		if (str.length() <= 1) {
-			return arr;
-		}
 		for (int i = 0; i < arr.size(); i++) {
-			array.add(array.get(i) + str.substring(0, 1));
+			array.add(arr.get(i) + str.substring(0, 1));
 		}
 		for (int i = 0; i < array.size(); i++) {
 			arr.add(array.get(i));
 		}
-		return subsetPrinter(array, str.substring(1));
+		if (str.length() <= 1) {
+			return arr;
+		}
+		return subsetPrinter(arr, str.substring(1));
 	}
 
 	// List contains a single String to start.
@@ -127,7 +128,17 @@ public class Recursion {
 	// the form "1 -> 2", meaning "take the top disk of tower 1 and
 	// put it on tower 2" etc.
 	public static void solveHanoi(int startingDisks) {
+		hanoiSolver(startingDisks, "0", "2", "1");
+	}
 
+	private static void hanoiSolver(int disks, String from, String to, String other) {
+		if (disks == 1) {
+			System.out.println(from + " -> " + to);
+			return;
+		}
+		hanoiSolver(disks - 1, from, other, to);
+		System.out.println(from + " -> " + to);
+		hanoiSolver(disks - 1, other, to, from);
 	}
 
 	// You are partaking in a scavenger hunt!
@@ -150,6 +161,37 @@ public class Recursion {
 	// time 9
 	// for a total of 20 points, so it would return 20.
 	public static int scavHunt(int[] times, int[] points) {
+		if (times[times.length - 2] == 0) {
+			return points[points.length - 1];
+		}
+		int[] times2 = times.clone();
+		int[] points2 = points.clone();
+		int largest = 0;
+		int prevTime = 0;
+		for (int i = 0; i < times.length; i++) {
+			times2[i] = 0;
+			points2[i] = 0;
+			if (times[i] != 0 && prevTime == 0) {
+				prevTime = times[i];
+				largest = points[i];
+				break;
+			}
+
+		}
+		for (int i = 0; i < times.length; i++) {
+			if (times[i] != 0) {
+				if (times[i] - 5 >= prevTime) {
+					largest += scavHunt(times, points);
+				}
+				times[i] = 0;
+				points[i] = 0;
+			}
+		}
+		int next = scavHunt(times2, points2);
+		if (next > largest) {
+			largest = next;
+		}
+		return largest;
 
 	}
 
