@@ -31,8 +31,14 @@ public class RecursionTester {
 
         // Recursion.solveHanoi(5);
 
-        int[] times = { 3, 7, 9, 10, 100 };
-        int[] points = { 10, 5, 10, 50, 100 };
-        System.out.println(Recursion.scavHunt(times, points));
+        // int[] times = { 3, 7, 9, 10, 100 };
+        // int[] points = { 10, 5, 10, 50, 100 };
+        // System.out.println(Recursion.scavHunt(times, points));
+
+        // Recursion.printPermutations("abc");
+
+        int[] sort = { 5, 1, 3, 7, 2, 4, 8 };
+        // Recursion.quickSort(sort);
+        Recursion.mergeSort(sort);
     }
 }

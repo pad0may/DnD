@@ -105,20 +105,104 @@ public class Recursion {
 	// "cab", "cba"
 	// Order is your choice
 	public static void printPermutations(String str) {
+		ArrayList<String> arr = new ArrayList<>();
+		arr.add("");
+		ArrayList<String> ret = permutationPrinter(arr, str);
+		for (int i = 0; i < ret.size(); i++) {
+			System.out.println(ret.get(i));
+		}
+	}
 
+	private static ArrayList<String> permutationPrinter(ArrayList<String> arr, String str) {
+		if (str.length() == 0) {
+			return arr;
+		}
+		ArrayList<String> ret = new ArrayList<>();
+		char curChar = str.charAt(0);
+		for (String s : arr) {
+			for (int i = 0; i <= s.length(); i++) {
+				ret.add(s.substring(0, i) + curChar + s.substring(i));
+			}
+		}
+		return permutationPrinter(ret, str.substring(1));
 	}
 
 	// Performs a mergeSort on the given array of ints
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void mergeSort(int[] ints) {
+		mergeSort(ints, 0, ints.length - 1);
+	}
 
+	private static void mergeSort(int[] ints, int startIndex, int endIndex) {
+		if (startIndex >= endIndex) {
+			return;
+		}
+		int midIndex = (startIndex + endIndex) / 2;
+		mergeSort(ints, startIndex, midIndex);
+		mergeSort(ints, midIndex + 1, endIndex);
+		sortMerge(ints, startIndex, midIndex, midIndex + 1, endIndex);
+	}
+
+	private static void sortMerge(int[] ints, int start1, int end1, int start2, int end2) {
+		int[] firstHalf = new int[end1 - start1 + 1];
+		int[] secondHalf = new int[end2 - start2 + 1];
+		int newI = 0;
+		for (int i = start1; i <= end1; i++, newI++) {
+			firstHalf[newI] = ints[i];
+		}
+		newI = 0;
+		for (int i = start2; i <= end2; i++, newI++) {
+			secondHalf[newI] = ints[i];
+		}
+		int firstI = 0;
+		int secondI = 0;
+		int i = 0;
+		while (firstI < firstHalf.length && secondI < secondHalf.length) {
+			if (firstHalf[firstI] < secondHalf[secondI]) {
+				ints[i++] = firstHalf[firstI++];
+			} else {
+				ints[i++] = secondHalf[secondI++];
+			}
+		}
 	}
 
 	// Performs a quickSort on the given array of ints
 	// Use the middle element (index n/2) as the pivot
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void quickSort(int[] ints) {
+		ArrayList<Integer> intArr = new ArrayList<>();
+		for (int i = 0; i < ints.length; i++) {
+			intArr.add(ints[i]);
+		}
+		ArrayList<Integer> arr = sortQuick(intArr);
+		for (int i = 0; i < arr.size(); i++) {
+			System.out.println(arr.get(i));
+		}
+	}
 
+	private static ArrayList<Integer> sortQuick(ArrayList<Integer> ints) {
+		if (ints.size() <= 1) {
+			return ints;
+		}
+		int pivot = ints.size() / 2;
+		int pivotVal = ints.get(pivot);
+		ArrayList<Integer> less = new ArrayList<>();
+		ArrayList<Integer> more = new ArrayList<>();
+		for (int i = 0; i < ints.size(); i++) {
+			if (ints.get(i) > pivotVal) {
+				more.add(ints.get(i));
+			}
+			if (ints.get(i) < pivotVal) {
+				less.add(ints.get(i));
+			}
+		}
+		less = sortQuick(less);
+		more = sortQuick(more);
+		less.add(pivotVal);
+		for (int i = 0; i < more.size(); i++) {
+			less.add(more.get(i));
+		}
+		return less;
 	}
 
 	// Prints a sequence of moves (one on each line)
