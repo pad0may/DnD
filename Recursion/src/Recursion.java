@@ -5,7 +5,12 @@ public class Recursion {
 	// Prints the value of every node in the singly linked list with the given head,
 	// but in reverse
 	public static void printListInReverse(ListNode head) {
-
+		if (head.getNext() == null) {
+			System.out.println(head.getValue());
+			return;
+		}
+		printListInReverse(head.getNext());
+		System.out.println(head.getValue());
 	}
 
 	// For the given 2D array of Strings, replaces the String at index[r][c]
@@ -84,6 +89,11 @@ public class Recursion {
 		}
 	}
 
+	/* 
+	helper method takes an array list and a string that is a single letter
+	for each object in the array, it will add a new object to the array which is equal to that object with the string appended to the end.
+	method then returns the array list
+	 */
 	private static ArrayList<String> subsetPrinter(ArrayList<String> arr, String str) {
 		ArrayList<String> array = new ArrayList<>();
 		for (int i = 0; i < arr.size(); i++) {
@@ -113,6 +123,13 @@ public class Recursion {
 		}
 	}
 
+	/*
+	 * method takes in an array list and a string 
+	 * the array list contains every permutation, the string is what remains of the original string and every letter that hasnt been added as part of the permutations
+	 * for each object in that array it will add a new object which is that object but with the first letter of the string inserted between each letter, once between each letter
+	 * it will then call itself on the full array the next letter in the string
+	 * once there are no more letters to add permutations for it returns the array
+	 */
 	private static ArrayList<String> permutationPrinter(ArrayList<String> arr, String str) {
 		if (str.length() == 0) {
 			return arr;
@@ -130,40 +147,67 @@ public class Recursion {
 	// Performs a mergeSort on the given array of ints
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void mergeSort(int[] ints) {
-		mergeSort(ints, 0, ints.length - 1);
+		ArrayList<Integer> intArr = new ArrayList<>();
+		for (int i = 0; i < ints.length; i++) {
+			intArr.add(ints[i]);
+		}
+		ArrayList<Integer> arr = sortMerge(intArr);
+		for (int i = 0; i < ints.length; i++) {
+			ints[i] = (int) arr.get(i);
+			// System.out.println(ints[i]);
+		}
 	}
 
-	private static void mergeSort(int[] ints, int startIndex, int endIndex) {
-		if (startIndex >= endIndex) {
-			return;
+	/* 
+	 * takes in an array list of integers, 
+	 * this array list will be smaller each time it is called, until there are only two objects at which point it compares them and sorts the array of two.
+	 * the full method splits the list into pairs and then combines them in order
+	 */
+	private static ArrayList<Integer> sortMerge(ArrayList<Integer> ints) {
+		if (ints.size() <= 1) {
+			return ints;
 		}
-		int midIndex = (startIndex + endIndex) / 2;
-		mergeSort(ints, startIndex, midIndex);
-		mergeSort(ints, midIndex + 1, endIndex);
-		sortMerge(ints, startIndex, midIndex, midIndex + 1, endIndex);
-	}
-
-	private static void sortMerge(int[] ints, int start1, int end1, int start2, int end2) {
-		int[] firstHalf = new int[end1 - start1 + 1];
-		int[] secondHalf = new int[end2 - start2 + 1];
-		int newI = 0;
-		for (int i = start1; i <= end1; i++, newI++) {
-			firstHalf[newI] = ints[i];
-		}
-		newI = 0;
-		for (int i = start2; i <= end2; i++, newI++) {
-			secondHalf[newI] = ints[i];
-		}
-		int firstI = 0;
-		int secondI = 0;
-		int i = 0;
-		while (firstI < firstHalf.length && secondI < secondHalf.length) {
-			if (firstHalf[firstI] < secondHalf[secondI]) {
-				ints[i++] = firstHalf[firstI++];
+		if (ints.size() == 2) {
+			if (ints.get(0) < ints.get(1)) {
+				return ints;
 			} else {
-				ints[i++] = secondHalf[secondI++];
+				ArrayList<Integer> ret = new ArrayList<>();
+				ret.add(ints.get(1));
+				ret.add(ints.get(0));
+				return ret;
 			}
 		}
+		ArrayList<Integer> left = new ArrayList<>();
+		ArrayList<Integer> right = new ArrayList<>();
+		for (int i = 0; i < ints.size() / 2; i++) {
+			left.add(ints.get(i));
+		}
+		for (int i = ints.size() / 2; i < ints.size(); i++) {
+			right.add(ints.get(i));
+		}
+		left = sortMerge(left);
+		right = sortMerge(right);
+		int leftInt = 0;
+		int rightInt = 0;
+		ArrayList<Integer> ret = new ArrayList<>();
+		while (leftInt < left.size() && rightInt < right.size()) {
+			if (left.get(leftInt) < right.get(rightInt)) {
+				ret.add(left.get(leftInt));
+				leftInt++;
+			} else {
+				ret.add(right.get(rightInt));
+				rightInt++;
+			}
+		}
+		while (leftInt < left.size()) {
+			ret.add(left.get(leftInt));
+			leftInt++;
+		}
+		while (rightInt < right.size()) {
+			ret.add(right.get(rightInt));
+			rightInt++;
+		}
+		return ret;
 	}
 
 	// Performs a quickSort on the given array of ints
@@ -176,7 +220,8 @@ public class Recursion {
 		}
 		ArrayList<Integer> arr = sortQuick(intArr);
 		for (int i = 0; i < arr.size(); i++) {
-			System.out.println(arr.get(i));
+			ints[i] = (int) arr.get(i);
+			// System.out.println(ints[i]);
 		}
 	}
 
