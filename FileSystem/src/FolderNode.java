@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a directory in the file system tree.
- * A directory can contain other directories and files as children.
+ * Represents a directory in the file system tree. A directory can contain other directories and
+ * files as children.
  */
 public class FolderNode extends FileSystemNode {
 
@@ -21,40 +21,51 @@ public class FolderNode extends FileSystemNode {
     }
 
     /**
-     * Returns a list view of the children contained directly inside this directory.
-     * Modifying the returned list is not required to be supported.
+     * Returns a list view of the children contained directly inside this directory. Modifying the
+     * returned list is not required to be supported.
      */
     public List<FileSystemNode> getChildren() {
         return children;
     }
 
     /**
-     * Searches the children of this directory for a node whose name matches the input.
-     * Only direct children are considered, not deeper descendants.
+     * Searches the children of this directory for a node whose name matches the input. Only direct
+     * children are considered, not deeper descendants.
      */
     public FileSystemNode getChildByName(String childName) {
-        // TODO: scan children for a matching name and return the node if found
+        for (FileSystemNode child : children) {
+            if (child.getName().equals(childName)) {
+                return child;
+            }
+        }
         return null;
+
     }
 
     /**
-     * Creates a new file directly inside this directory with the given name and size.
-     * If a child with the same name already exists, no file is created and false is returned.
-     * Otherwise the new file is added and true is returned.
+     * Creates a new file directly inside this directory with the given name and size. If a child
+     * with the same name already exists, no file is created and false is returned. Otherwise the
+     * new file is added and true is returned.
      */
     public boolean addFile(String fileName, int size) {
-        // TODO: implement uniqueness check and insertion of a new FileNode
-        return false;
+        if (getChildByName(fileName) != null) return false;
+        FileNode newFile = new FileNode(this, fileName, size);
+        children.add(newFile);
+        return true;
     }
 
     /**
-     * Creates a new subdirectory directly inside this directory with the given name.
-     * If a child with the same name already exists, no folder is created and false is returned.
-     * Otherwise the new folder is added and true is returned.
+     * Creates a new subdirectory directly inside this directory with the given name. If a child
+     * with the same name already exists, no folder is created and false is returned. Otherwise the
+     * new folder is added and true is returned.
      */
     public boolean addFolder(String folderName) {
-        // TODO: implement uniqueness check and insertion of a new FolderNode
-        return false;
+        if (getChildByName(folderName) != null) {
+            return false;
+        }
+        FolderNode newFolder = new FolderNode(folderName, this);
+        children.add(newFolder);
+        return true;
     }
 
     /**
@@ -62,20 +73,42 @@ public class FolderNode extends FileSystemNode {
      * When a match is found, its full path can be printed by the caller using toString().
      */
     public boolean containsNameRecursive(String searchName) {
-        // TODO: check this directory and all descendants for the given name
-        return false;
+        if (children.size() == 0) return false;
+        for (FileSystemNode child : children) {
+            if (getChildByName(searchName) != null) {
+                return true;
+            }
+            if (child.isFolder()) {
+                FolderNode temp = (FolderNode) child;
+                temp.containsNameRecursive(searchName);
+            }
+        }
     }
 
     @Override
     public int getHeight() {
-        // TODO: compute the maximum height among children; empty folders have value 0
-        return 0;
+        int height = 0;
+        FileSystemNode temp = this;
+    }
+
+    private int heightGet(int count) {
+        int folderCount = 0;
+        for (FileSystemNode child : children) {
+            if (child.isFolder()) folderCount++;
+        }
+        if (folderCount == 0) return count;
+        for (FileSystemNode child : children) {
+            
+        }
     }
 
     @Override
     public int getSize() {
-        // TODO: sum the sizes of all files contained in this directory and its descendants
-        return 0;
+        int size = 0;
+        for (FileSystemNode child : children) {
+            size += child.getSize();
+            }
+        return size;
     }
 
     @Override
