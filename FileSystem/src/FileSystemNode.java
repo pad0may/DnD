@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Represents a node in a file system tree.
  * Both folders and files share a name and a reference to their parent folder.
@@ -71,7 +73,20 @@ public abstract class FileSystemNode {
      */
     @Override
     public String toString() {
-        // TODO: build a string like "/root/folder/subfolder/file"
-        return null;
+        if (parent == null) {
+            return "/";
+        }
+        ArrayList<String> path = new ArrayList<>();
+        FileSystemNode temp = this;
+        while (temp.getParent() != null) {
+            path.add(temp.getName());
+            temp = temp.getParent();
+        }
+        StringBuilder pathString = new StringBuilder();
+        for (int i = path.size()-1; i >= 0; i--) {
+            pathString.append("/");
+            pathString.append(path.get(i));
+        }
+        return pathString.toString();
     }
 }

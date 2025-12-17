@@ -1,5 +1,5 @@
 /**
- * Represents an entire file system hierarchy. This class owns the root directory and can provide
+ * Represents an entire file system hierarchy. This class owns the root directory and can provi 
  * access to it.
  */
 public class FileSystemTree {
@@ -18,7 +18,6 @@ public class FileSystemTree {
      * Provides the root of the directory tree so callers can navigate from the top.
      */
     public FolderNode getRoot() {
-        // TODO: return the root directory
         return root;
     }
 }

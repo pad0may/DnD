@@ -47,7 +47,31 @@ public class Navigator {
      *   - Other paths are interpreted relative to the current directory.
      */
     private void cd(String[] args) {
-        // TODO: implement directory navigation
+        try {
+            String[] moves;
+            if (args[0].substring(0,1).equals("/")) {
+                currentDirectory = fileSystem.getRoot();
+                moves = args[0].substring(1).split("/");
+            } if (args[0].length() == 1) {
+                return;
+            } else {
+                moves = args[0].split("/");
+            }
+            for (String move : moves) {
+                if (move.equals(".")) continue;
+                if (move.equals("..")) {
+                    currentDirectory = currentDirectory.getParent();
+                    continue;
+                } if (currentDirectory.getChildByName(move) == null || !currentDirectory.getChildByName(move).isFolder()) {
+                    throw new Exception("cd: not a directory: " + move);
+                }
+                else {
+                    currentDirectory = (FolderNode) currentDirectory.getChildByName(move);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -55,21 +79,33 @@ public class Navigator {
      * Output formatting can mirror typical file system listings.
      */
     private void ls(String[] args) {
-        // TODO: print names of all child nodes of currentDirectory
+        for (FileSystemNode Node : currentDirectory.getChildren()) {
+            System.out.print(Node.getName());
+            if (Node.isFolder()) System.out.println("/");
+            else System.out.println("");
+        }
     }
 
     /**
      * Creates a new directory inside the current directory using the provided name.
      */
     private void mkdir(String[] args) {
-        // TODO: read folder name from args and delegate to currentDirectory.addFolder(...)
+        try {
+            currentDirectory.addFolder(args[0]);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     /**
      * Creates a new file inside the current directory with a given name and size.
      */
     private void touch(String[] args) {
-        // TODO: read file name and size from args and delegate to currentDirectory.addFile(...)
+        try {
+            currentDirectory.addFile(args[0], Integer.parseInt(args[1]));
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     /**
@@ -77,14 +113,14 @@ public class Navigator {
      * and prints their paths.
      */
     private void find(String[] args) {
-        // TODO: use recursive search starting at currentDirectory
+        System.out.println(currentDirectory.containsName(args[0]) + "/" + args[0]);
     }
 
     /**
      * Prints the absolute path of the current directory, from the root to this node.
      */
     private void pwd(String[] args) {
-        // TODO: use currentDirectory.toString() or similar path builder
+        System.out.println(currentDirectory.toString());
     }
 
     /**
@@ -92,7 +128,24 @@ public class Navigator {
      * respecting flags or depth limits if provided by the arguments.
      */
     private void tree(String[] args) {
-        // TODO: implement tree-style printing with indentation and branch characters
+        // System.out.println(currentDirectory.getName());
+        printTree(currentDirectory, "");
+    }
+
+    private void printTree(FolderNode folder, String lines) {
+        int length = folder.getChildren().size();
+        for (int i = 0; i < length; i++) {
+            FileSystemNode node = folder.getChildren().get(i);
+            System.out.print(lines);
+            System.out.print("|---");
+            System.out.println(node.getName());
+            if (node.isFolder() && i == length-1) {
+                printTree((FolderNode) node, (lines + "    "));
+            } if (node.isFolder() && i != length-1) {
+                printTree((FolderNode) node, (lines + "|   "));
+            }
+        }
+       
     }
 
     /**
@@ -100,14 +153,14 @@ public class Navigator {
      * and all of its subdirectories.
      */
     private void count(String[] args) {
-        // TODO: call a counting method on currentDirectory
+        System.out.println(currentDirectory.getTotalNodeCount()-1);
     }
 
     /**
      * Prints the total size of all files reachable from the current directory.
      */
     private void size(String[] args) {
-        // TODO: call a size-calculation method on currentDirectory
+        System.out.println(currentDirectory.getSize());
     }
 
     /**
@@ -115,7 +168,7 @@ public class Navigator {
      * from the root directory down to this directory.
      */
     private void depth(String[] args) {
-        // TODO: use a depth method on currentDirectory
+        System.out.println(currentDirectory.getDepth());
     }
 
     /**
@@ -124,7 +177,7 @@ public class Navigator {
      * An empty directory has value 0.
      */
     private void height(String[] args) {
-        // TODO: use a height method on currentDirectory
+        System.out.println(currentDirectory.getHeight());
     }
 
     /**
