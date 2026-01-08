@@ -7,10 +7,19 @@ public class BSTtester {
         // BinaryNode node3 = new BinaryNode("3");
         // BinaryNode node4 = new BinaryNode("4");
 
-        bst.add("2");
-        bst.add("1");
-        bst.add("3");
-        bst.add("5");
-        bst.add("4");
+        bst.add("ab");
+        bst.add("ac");
+        bst.add("aa");
+        bst.add("ap");
+        bst.add("ad");
+
+        // bst.add("ab");
+        // bst.add("ac");
+        // bst.add("aa");
+        // bst.add("ap");
+        // bst.add("ad");
+
+        System.out.println(bst.toStringHeight());
+        System.out.println(bst.getRoot().getValue());
     }
 }
