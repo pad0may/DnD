@@ -92,9 +92,18 @@ public class MyBST<E extends Comparable<E>> {
 	//  largest node in the right subtree
 	public boolean remove(E value) {
 		if (!this.contains(value)) return false;
-		if (condition) {
-			
-		}
+		BinaryNode del = find(value);
+		if (!del.hasLeft() && !del.hasRight()) {
+			if (del.getParent().hasRight() && del.getParent().getRight().equals(del)) {
+				del.getParent().setRight(null);
+				return true;
+			} else {
+				del.getParent().setLeft(null);
+				return true;
+			}
+		} else if (
+			(del.getParent().hasLeft() && !del.getParent().hasRight())
+		)
 	}
 	
 	// Returns the minimum in the tree
