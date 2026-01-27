@@ -25,13 +25,13 @@ public class MyStack<E> {
 
     public E peek() {
         if (head == null) {
-            throw new EmptyStackException();
+            return null;
         }
         return head.getValue();
     }
 
     public boolean empty() {
-        if (peek() == null) {
+        if (head == null) {
             return true;
         }
         return false;
