@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -47,8 +48,9 @@ public class CookieMonster {
 
     //You may find it VERY helpful to write this helper method.  Or not!
 	private boolean validPoint(int row, int col) {
-		//Write this if you want
-		return false;
+		if (row >= this.numRows || col >= this.numCols) return false;
+		if (this.cookieGrid[row][col] == -1) return false;
+		return true;
 	}
 	
 	/* RECURSIVELY calculates the route which grants the most cookies.
@@ -59,17 +61,11 @@ public class CookieMonster {
 	
 	// Returns the maximum number of cookies edible starting from (and including) cookieGrid[row][col]
 	public int recursiveCookies(int row, int col) {
-		int[] ints = new int[0];
-		if (row == this.numRows && col == this.numCols) return 0;
-		else if (row == this.numRows && col != this.numCols) {
-			recursiveCookies(row, col+1);
-		}
-		else if (row != this.numRows && col == this.numCols) {
-			recursiveCookies(row+1, col);
-		} else {
-			recursiveCookies(row, col+1);
-			recursiveCookies(row+1, col);
-		}
+		if (!validPoint(row, col)) return 0;
+		int int1 = recursiveCookies(row + 1, col);
+		int int2 = recursiveCookies(row, col+1);
+		int ret = int1 > int2 ? int1 : int2;
+		return ret == -1 ? 0 : ret + cookieGrid[row][col];
 	}
 	
 
@@ -77,8 +73,8 @@ public class CookieMonster {
 	 * Returns the maximum number of cookies attainable. */
     /* From any given position, always add the path right before adding the path down */
     public int queueCookies() {
-		//CODE THIS
-		return 0;
+		ArrayDeque<OrphanScout> orphanage = new ArrayDeque<>();
+		
     }
 
     
