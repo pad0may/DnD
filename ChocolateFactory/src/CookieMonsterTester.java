@@ -41,14 +41,14 @@ public class CookieMonsterTester {
 			long end1 = System.currentTimeMillis();
 			System.out.println("Solved using recursion");
 			System.out.println("Optimal path has " + optrecursion + " cookies, using recursion to search.  TIME: " + (end1-start) + " milliseconds");
-			// int optqueue = monster.queueCookies();
-			// long end2 = System.currentTimeMillis();
-			// System.out.println("Solved using queue");
-			// System.out.println("Optimal path has " + optqueue + " cookies, using a queue to search.  TIME: " + (end2-end1) + " milliseconds");
-			// int optstack = monster.stackCookies();
-			// long end3 = System.currentTimeMillis();
-			// System.out.println("Solved using stack");
-			// System.out.println("Optimal path has " + optstack + " cookies, using a stack to search.  TIME: " + (end3-end2)  + " milliseconds");
+			int optqueue = monster.queueCookies();
+			long end2 = System.currentTimeMillis();
+			System.out.println("Solved using queue");
+			System.out.println("Optimal path has " + optqueue + " cookies, using a queue to search.  TIME: " + (end2-end1) + " milliseconds");
+			int optstack = monster.stackCookies();
+			long end3 = System.currentTimeMillis();
+			System.out.println("Solved using stack");
+			System.out.println("Optimal path has " + optstack + " cookies, using a stack to search.  TIME: " + (end3-end2)  + " milliseconds");
 		}
 	}
 }

@@ -74,7 +74,24 @@ public class CookieMonster {
     /* From any given position, always add the path right before adding the path down */
     public int queueCookies() {
 		ArrayDeque<OrphanScout> orphanage = new ArrayDeque<>();
-		
+		orphanage.add(new OrphanScout(0, 0, cookieGrid[0][0]));
+		int max = 0;
+		while (orphanage.size() > 0) {
+			OrphanScout prev = orphanage.peek();
+			int row = prev.getEndingRow(); 
+			int col = prev.getEndingCol();
+			if (validPoint(row, col + 1)) {
+				int cookies = prev.getCookiesDiscovered() + cookieGrid[row][col + 1];
+				orphanage.add(new OrphanScout(row, col + 1, cookies));
+			}
+			if (validPoint(row + 1, col)) {
+				int cookies = prev.getCookiesDiscovered() + cookieGrid[row + 1][col];
+				orphanage.add(new OrphanScout(row + 1, col, cookies));
+			}
+			OrphanScout endOrphan = orphanage.poll();
+			max = endOrphan.getCookiesDiscovered() > max ? endOrphan.getCookiesDiscovered() : max;
+		}
+		return max;
     }
 
     
@@ -82,8 +99,25 @@ public class CookieMonster {
  	 * Returns the maximum number of cookies attainable. */
     /* From any given position, always add the path right before adding the path down */
     public int stackCookies() {
-		//CODE THIS
-		return 0;
+		Stack<OrphanScout> bodyPile = new Stack<>();
+		bodyPile.add(new OrphanScout(0, 0, cookieGrid[0][0]));
+		int max = 0;
+		while (bodyPile.size() > 0) {
+			OrphanScout prev = bodyPile.peek();
+			int row = prev.getEndingRow(); 
+			int col = prev.getEndingCol();
+			if (validPoint(row, col + 1)) {
+				int cookies = prev.getCookiesDiscovered() + cookieGrid[row][col + 1];
+				bodyPile.add(new OrphanScout(row, col + 1, cookies));
+			}
+			if (validPoint(row + 1, col)) {
+				int cookies = prev.getCookiesDiscovered() + cookieGrid[row + 1][col];
+				bodyPile.add(new OrphanScout(row + 1, col, cookies));
+			}
+			OrphanScout endOrphan = bodyPile.pop();
+			max = endOrphan.getCookiesDiscovered() > max ? endOrphan.getCookiesDiscovered() : max;
+		}
+		return max;
     }
 
 }
