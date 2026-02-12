@@ -1,10 +1,10 @@
 
-public class HeapPQ<E extends Comparable<E>> implements MyPriorityQueue<E> {
+public class MyPQ<E extends Comparable<E>> implements MyPriorityQueue<E>{
 
 	private E[] heap;
 	private int objectCount;
 
-	public HeapPQ() {
+	public MyPQ() {
 		this.heap = (E[])new Comparable[3];
 		this.objectCount = 0;
 	}
@@ -105,11 +105,6 @@ public class HeapPQ<E extends Comparable<E>> implements MyPriorityQueue<E> {
 	@Override
 	public E removeMin() {
 		E ret = heap[0];
-		if (objectCount == 1) {
-			heap[0] = null;
-			objectCount--;
-			return ret;
-		}
 		heap[0] = heap[objectCount-1];
 		heap[objectCount-1] = null;
 		objectCount--;
