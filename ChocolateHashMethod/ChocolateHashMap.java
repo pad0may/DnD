@@ -1,3 +1,5 @@
+import java.util.ArrayDeque;
+
 /**
  * ChocolateHashMap<K,V>
  *
@@ -51,25 +53,29 @@ public class ChocolateHashMap<K, V> {
     // NOTE: Math.abs(Integer.MIN_VALUE) is still negative. Consider masking the sign bit.
     private int whichBucket(K key) {
         int keyHash = key.hashCode();
-        if (keyHash > 0) {
-            keyHash = keyHash * -1;
+        if (keyHash < 0) {
+            keyHash = -keyHash;
+        } if (keyHash == Integer.MIN_VALUE) {
+            return 0;
         }
         return keyHash % buckets.length;
     }
 
     // Returns the current load factor (objCount / buckets)
     public double currentLoadFactor() {
-        return 1.0 * objectCount / buckets.length;
+        return 1.0 * objectCount / (double) buckets.length;
     }
 
     // Return true if the key exists as a key in the map, otherwise false.
     // Use the .equals method to check equality.
     public boolean containsKey(K key) {
-        BatchNode<ChocolateEntry<K, V>> tempNode = buckets[whichBucket(key)];
-        while (!tempNode.getNext().isSentinel()) {
+        BatchNode<ChocolateEntry<K, V>> tempNode = buckets[whichBucket(key)].getNext();
+        while (!tempNode.isSentinel()) {
             ChocolateEntry<K, V> tempEntry = tempNode.getEntry();
             if (tempEntry.getKey().equals(key)) {
                 return true;
+            } else {
+                tempNode = tempNode.getNext();
             }
         }
         return false;
@@ -79,12 +85,13 @@ public class ChocolateHashMap<K, V> {
     // Use the .equals method to check equality.
     public boolean containsValue(V value) {
         for (int i = 0; i < buckets.length; i++) {
-            BatchNode<ChocolateEntry<K, V>> tempNode = buckets[i];
-            while (!tempNode.getNext().isSentinel()) {
+            BatchNode<ChocolateEntry<K, V>> tempNode = buckets[i].getNext();
+            while (!tempNode.isSentinel()) {
                 ChocolateEntry<K, V> tempEntry = tempNode.getEntry();
-                if (tempEntry.getValue() != null && tempEntry.getValue().equals(value)) {
+                if (tempEntry.getValue() == value || (tempEntry.getValue() != null && tempEntry.getValue().equals(value))) {
                     return true;
                 }
+                tempNode = tempNode.getNext();
             }
         }
         return false;
@@ -98,26 +105,60 @@ public class ChocolateHashMap<K, V> {
     // - If so, you must call rehash with double the current bucket size.
     public boolean put(K key, V value) {
         boolean containsKey = containsKey(key);
-        if (containsKey) {
-            boolean containsValue = containsValue(value);
-            if (containsValue) {
-                return false;
-            }
+        if (containsKey) return false;
+        if (!buckets[whichBucket(key)].getNext().isSentinel()) {
+            BatchNode tempPrev = buckets[whichBucket(key)].getPrevious();
+            ChocolateEntry<K, V> entry = new ChocolateEntry<K,V>(key, value);
+            BatchNode add = new BatchNode(entry, tempPrev, buckets[whichBucket(key)]);
+            tempPrev.setNext(add);
+            buckets[whichBucket(key)].setPrevious(add);
+        } else {
+            ChocolateEntry<K, V> entry = new ChocolateEntry<K,V>(key, value);
+            BatchNode add = new BatchNode(entry, buckets[whichBucket(key)], buckets[whichBucket(key)]);
+            buckets[whichBucket(key)].setPrevious(add);
+            buckets[whichBucket(key)].setNext(add);
+        } 
+        objectCount++;
+        if (currentLoadFactor() >= this.loadFactorLimit) {
+            rehash(buckets.length*2);
         }
+        return true;
     }
 
     // Returns the value associated with the key in the map.
     // If the key is not in the map, then return null.
     public V get(K key) {
-        // TODO: implement
-        throw new UnsupportedOperationException("TODO: implement get");
+        if (containsKey(key)) {
+            BatchNode<ChocolateEntry<K, V>> tempNode = buckets[whichBucket(key)].getNext();
+            while (!tempNode.isSentinel()) {
+                ChocolateEntry<K, V> tempEntry = tempNode.getEntry();
+                if (tempEntry.getKey().equals(key)) {
+                    return tempEntry.getValue();
+                }
+                tempNode = tempNode.getNext();
+            }
+        }
+        return null;
     }
 
     // Remove the pair associated with the key.
     // Return true if successful, false if the key did not exist.
     public boolean remove(K key) {
-        // TODO: implement
-        throw new UnsupportedOperationException("TODO: implement remove");
+        if (containsKey(key)) {
+            BatchNode<ChocolateEntry<K, V>> tempNode = buckets[whichBucket(key)].getNext();
+            while (!tempNode.isSentinel()) {
+                ChocolateEntry<K, V> tempEntry = tempNode.getEntry();
+                if (tempEntry.getKey().equals(key)) {
+                    break;
+                }
+                tempNode = tempNode.getNext();
+            }
+            tempNode.getPrevious().setNext(tempNode.getNext());
+            tempNode.getNext().setPrevious(tempNode.getPrevious());
+            objectCount--;
+            return true;
+        }
+        return false;
     }
 
     // Rehash the map so that it contains the given number of buckets
@@ -126,8 +167,20 @@ public class ChocolateHashMap<K, V> {
     // I.e. if a bucket originally has (sentinel)->J->Z->K, then J will be rehashed first,
     // followed by Z, then K.
     public void rehash(int newBucketCount) {
-        // TODO: implement
-        throw new UnsupportedOperationException("TODO: implement rehash");
+        ArrayDeque rehashQ = new ArrayDeque<ChocolateEntry<K, V>>();
+        for (BatchNode row : buckets) {
+            BatchNode<ChocolateEntry<K, V>> tempNode = row.getNext();
+            while (!tempNode.isSentinel()) {
+                rehashQ.add(tempNode.getEntry());
+                tempNode = tempNode.getNext();
+            }
+        }
+        ChocolateHashMap newMap = new ChocolateHashMap<>(newBucketCount, loadFactorLimit);
+        while (!rehashQ.isEmpty()) {
+            ChocolateEntry<K, V> entry = (ChocolateEntry<K, V>) rehashQ.poll();
+            newMap.put(entry.getKey(), entry.getValue());
+        }
+        this.buckets = newMap.buckets;
     }
 
     // The output should be in the following format:
@@ -140,7 +193,21 @@ public class ChocolateHashMap<K, V> {
     // [ 3, 10 | { b3: LOT-70,DARK LOT-12,MILK } { b7: LOT-99,WHITE } ]
     @Override
     public String toString() {
-        // TODO: implement
-        throw new UnsupportedOperationException("TODO: implement toString");
+        StringBuilder str = new StringBuilder();
+        str.append("[ "); str.append(objectCount); str.append(", "); str.append(buckets.length); str.append(" | ");
+        for (int i = 0; i < buckets.length; i++) {
+                if (!buckets[i].getNext().isSentinel()) {
+                BatchNode<ChocolateEntry<K, V>> tempNode = buckets[i].getNext();
+                str.append("{ "); str.append('b'); str.append(i); str.append(": ");
+                while (!tempNode.isSentinel()) {
+                    ChocolateEntry<K, V> tempEntry = tempNode.getEntry();
+                    str.append(tempEntry.getKey()); str.append(','); str.append(tempEntry.getValue()); str.append(' ');
+                    tempNode = tempNode.getNext();
+                }
+                str.append("} ");
+            }
+        }
+        str.append(']');
+        return str.toString();
     }
 }
