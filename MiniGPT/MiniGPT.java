@@ -59,7 +59,7 @@ public class MiniGPT {
 	public void generateText(String outputFileName, int numChars) {
 		StringBuilder output = new StringBuilder();
 		output.append(keys.get((int) Math.floor(Math.random()*(keys.size()))));
-		for (int i = output.length(); i < numChars-output.length(); i++) {
+		for (int i = output.length(); i < numChars; i++) {
 			String prev = output.substring(i-(chainOrders), i);
 			int random = (int) Math.floor(Math.random()*(chain.get(prev).size()));
 			output.append(chain.get(prev).get(random));
