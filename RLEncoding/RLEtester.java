@@ -4,7 +4,13 @@ public class RLEtester {
     public static void main(String[] args) throws IOException {
         RLECompression.encode("text");
         RLECompression.decode("text.rle");
-        // RLECompression.bwTransform("text");
-        // RLECompression.invertBWTransform("text.bw");
+        RLECompression.bwTransform("text");
+        RLECompression.invertBWTransform("text.bw");
+
+        RLECompression.bwTransform("text");
+        RLECompression.encode("text.bw");
+
+        RLECompression.decode("text.bw.rle");
+        RLECompression.decode("text.bw");
     }
 }
